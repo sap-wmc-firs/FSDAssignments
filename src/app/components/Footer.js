@@ -5,7 +5,7 @@ export default function Footer(props) {
          return (
             <div>
                 <hr/>
-                Copyrights @{props.year}, {props.company}
+                Copyrights@{props.year}, {props.company}
                 {props.children}
             </div>
         )
