@@ -30,7 +30,7 @@ You can read more about Consul's internal architecture here https://www.consul.i
 * Initialize consul in your application
   ```javascript
   var consul = require('consul')({
-	host: sysIP, //internal ip address
+	host: sysIP, //consul server address
 	port: 8500 //default 
   });
   ```
