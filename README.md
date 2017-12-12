@@ -79,3 +79,84 @@ You can read more about Consul's internal architecture here https://www.consul.i
 		});
   });
 
+### Trade Service
+#### Steps to start the trade service.
+1. Go to TradeService/UI
+2. npm install
+3. npm start
+
+#### Below are the end points exposed.
+
+1. http://localhost:8080/get/trades/all
+	It is a get call which will return all the trades data.
+	Sample Output: 
+	[
+		{
+			"_id": "5a2f84880382d19ecd67f46a",
+			"tradeId": 1,
+			"side": "Buy",
+			"quantity": 200,
+			"price": 20.42,
+			"tradeDate": "07-12-2017",
+			"status": "NOMINATED",
+			"counterParty": "Ipsum",
+			"commodity": "LA",
+			"location": "BA"
+		},
+		{
+			"_id": "5a2f85974979db1be04f2408",
+			"tradeId": 11,
+			"side": "Sell",
+			"quantity": 200,
+			"price": 20.42,
+			"tradeDate": "07-12-2017",
+			"status": "NOMINATED",
+			"counterParty": "Ipsum",
+			"commodity": "LA",
+			"location": "BA"
+		}
+	]
+
+2. http://localhost:8080/update/trade
+	It is a POST call which will insert/update the trade.
+	Sample Input:
+	change an existing trade
+	{	
+		"tradeId": 1,
+        "side": "Buy",
+        "quantity": 200,
+        "price": 20.42,
+        "tradeDate": "07-12-2017",
+        "status": "NOMINATED",
+        "counterParty": "Ipsum",
+        "location": "BA",
+        "commodity": "LA"
+    }
+	
+	or 
+	create a new trade
+	{	
+        "side": "Buy",
+        "quantity": 200,
+        "price": 20.42,
+        "tradeDate": "07-12-2017",
+        "status": "NOMINATED",
+        "counterParty": "Ipsum",
+        "location": "BA",
+        "commodity": "LA"
+    }
+
+3. http://localhost:8080/delete/trade
+	It is a POST call which will delete an existing trade.
+	Sample Input:
+	{	
+		"tradeId": 2,
+        "side": "Sell",
+        "quantity": 200,
+        "price": 20.42,
+        "tradeDate": "07-12-2017",
+        "status": "NOMINATED",
+        "counterParty": "Ipsum",
+        "location": "BA",
+        "commodity": "LA"
+    }
