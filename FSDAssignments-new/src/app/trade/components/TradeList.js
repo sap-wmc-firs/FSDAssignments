@@ -5,6 +5,9 @@ import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'm
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import * as actions from "../state/actions";
 
 const styles = theme => ({
     root: {
@@ -154,5 +157,22 @@ const styles = theme => ({
   TradeList.propTypes = {
     classes: PropTypes.object.isRequired,
   };
-  
-  export default withStyles(styles)(TradeList);
+
+const mapStateToProps = (state) => {
+    return {
+         rightPanel: state.tradeState.rightPanel,
+         trades: state.tradeState.trades,
+         loading: state.tradeState.loading,
+         error: state.tradeState.error
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators(actions, dispatch),
+        //showRightPanel: bindActionCreators(actions.showRightPanel, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, 
+                    mapDispatchToProps) (withStyles(styles)(TradeList))

@@ -1,4 +1,5 @@
 1) Rabit MQ installation - http://www.rabbitmq.com/install-windows.html
+   Download ERLANG - http://www.erlang.org/downloads otp_win64_20.1 before installing Rabit MQ
    It will start automatically.
 
 2) Open both consumer & producer in different cmd

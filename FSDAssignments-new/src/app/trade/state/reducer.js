@@ -1,7 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 
 const INITIAL_STATE = {
-    rightPanel : 'none'
+    rightPanel : 'none',
+    trades: [],
+    loading: false,
+    error: false,
+    errorMessage: ''
 };
 
 export default function tradeReducer(state = INITIAL_STATE, action){
