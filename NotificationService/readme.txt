@@ -4,6 +4,8 @@
 2) Open both consumer & producer in different cmd
 
 Producer :-
+=>Market data posted to http://<10.203.102.203>:3000/api/addMarketDataToQueue
+=>Trade data posted to http://<10.203.102.203>:3000/api/addTradeToQueue
 cd message_broker
 npm start
 
