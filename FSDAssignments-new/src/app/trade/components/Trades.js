@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
 
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
@@ -11,6 +12,9 @@ export default class Trades extends Component{
 
     constructor(props){
         super(props);
+        this.state = {
+            socket : null
+        }
     }
 
     componentDidMount() {
@@ -82,7 +86,31 @@ export default class Trades extends Component{
               "location": "SG"
             }
           ];
-        this.props.actions.initTrades(data);
+        
+          this.state.socket = io( 'http://10.203.102.203:3030/notify_service' );
+
+        // listen to messages on socket
+        // built-in message
+        this.state.socket.on( 'connect', () => {
+            this.state.socket.emit( 'join channel', 'dataUpdate', function( confirmation ) {
+                console.log( confirmation );
+            } );
+        } );
+        this.state.socket.on( 'connect_error', () => {
+                alert( "There seems to be an issue with Data Notification Service! Please contact #FIIDS" );
+        } );
+        this.state.socket.on( 'trade added', ( socketData ) => {
+               if(socketData.length > 0){
+                   socketData.forEach(item =>{
+                       data.push(item);
+                   });
+                   this.props.actions.initTrades(data);
+               }
+        } );
+
+        
+          this.props.actions.initTrades(data);
+        //this.props.actions.fetchTradesAsync();
       }
 
     showRightPanel (panelName){
