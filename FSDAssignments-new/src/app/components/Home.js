@@ -8,14 +8,14 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
 import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/fa/user';
-import Trades from "./Trades";
+import Trades from "../trade/container/Trades";
 import Transfers from "./Transfers";
 import Transports from "./Transports";
 
     const styles = theme => ({
         root: {
         marginTop: theme.spacing.unit,
-        width: '100%',
+        //width: '100%',
         backgroundColor: theme.palette.background.paper,
         },
     });

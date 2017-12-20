@@ -6,6 +6,10 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 
+import CreateTrade from "./CreateTrade";
+import EditTrade from "./EditTrade";
+import ShowTrade from "./ShowTrade";
+
 const styles = theme => ({
     root: {
       width: '100%',
@@ -17,53 +21,6 @@ const styles = theme => ({
     },
   });
 
-/*   let id = 0;
-  function createData(tradeDate, commodity, side, qty, price, counterParty, location) {
-    id += 1;
-    return { id, tradeDate, commodity, side, qty, price, counterParty, location };
-  }
-  
-  const data = [
-    createData('23-03-2017', 'AL', 'Buy', 100, '$1,860.75', 'Loren', 'BA'),
-    createData('23-03-2017', 'AL', 'Sell', 50, '$1,860.75', 'Dolor', 'LON'),
-    createData('23-03-2017', 'AL', 'Buy', 100, '$1,860.75', 'Amet', 'NYC'),
-    createData('23-03-2017', 'AL', 'Buy', 200, '$1,860.75', 'Sit', 'TOK'),
-    createData('23-03-2017', 'AL', 'Sell', 100, '$1,860.75', 'Ipsum', 'DUB'),
-    createData('23-03-2017', 'AL', 'Buy', 50, '$1,860.75', 'Consectitor', 'NOR'),
-    createData('23-03-2017', 'AL', 'Sell', 75, '$1,860.75', 'Loren', 'HON'),
-    createData('23-03-2017', 'AL', 'Buy', 100, '$1,860.75', 'amet', 'BA'),
-    createData('23-03-2017', 'AL', 'Sell', 110, '$1,860.75', 'Dolor', 'Lon')
-  ]; */
-
-/*   const createTrade = () => {
-    const rightPanel = 'createTrade';
-    this.setState(
-        {
-            rightPanel
-        }
-    );
-  }; */
-
-  /*  const handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  }; */
 
   class TradeList extends Component {
 
@@ -72,12 +29,20 @@ const styles = theme => ({
       this.classes = props;
     }
 
-    componentDidMount() {
-      this.props.actions.fetchTradesAsync();
+    loadShowPanel(event, trade) {
+      this.props.setSelected(trade);
+      this.props.showRightPanel('showTrade');
+    } 
+
+    loadEditPanel(){
+      this.props.showRightPanel('editTrade');
     }
 
-    showRightPanel (panelName){
-      this.props.actions.showRightPanel(panelName);
+    isSelected = (id) => {
+      if(this.props.selected !== undefined && this.props.selected != {} && this.props.selected.tradeId === id)
+        return true;
+      else        
+        return false;
     }
 
     render() {
@@ -94,7 +59,10 @@ const styles = theme => ({
         )
       }
 
+      const showRightPanel = this.props.rightPanel;
+
       return (
+        <div>
         <Paper className={this.classes.root}>
           <Table className={this.classes.table}>
             <TableHead>
@@ -110,15 +78,16 @@ const styles = theme => ({
             </TableHead>
             <TableBody>
               {this.props.trades.map(n => {
+                const isSelected = this.isSelected(n.tradeId);
                 return (
                   <TableRow 
                   hover
-                /*  onClick={event => this.handleClick(event, n.id)}
-                  onKeyDown={event => this.handleKeyDown(event, n.id)}
+                  onClick={event => this.loadShowPanel(event, n)}
+                  //onKeyDown={event => this.handleKeyDown(event, n.id)}
                   //role="checkbox"
-                  aria-checked={isSelected}
+                  //aria-checked={isSelected}
                   tabIndex={-1}
-                  selected={isSelected} */
+                  selected={isSelected} 
                   key={n.id}>
                     <TableCell>{n.tradeDate}</TableCell>
                     <TableCell>{n.commodity}</TableCell>
@@ -133,22 +102,31 @@ const styles = theme => ({
             </TableBody>
             <TableFooter>
                 <TableRow>
-                  <Button fab color="primary" aria-label="add" onClick={ this.showRightPanel('create') }>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell><Button fab color="primary" aria-label="add" onClick={ () => this.props.showRightPanel('createTrade') }>
                       <AddIcon />
-                  </Button>
+                  </Button></TableCell>
+                  
                 </TableRow>
             </TableFooter>
           </Table>
         </Paper>
+
+        {showRightPanel === 'showTrade' && <ShowTrade trade = {this.props.selected} editAction = { () => this.loadEditPanel()} />}
+        {showRightPanel === 'createTrade' && <CreateTrade showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
+        {showRightPanel === 'editTrade' && <EditTrade trade = {this.props.selected} />}
+        </div>
       );
     }
   }
   
   TradeList.defaultProps = {
-    trades: [],
-    loading: false,
-    error: false,
-    errorMessage: ''
+
   }
 
   TradeList.propTypes = {

@@ -1,13 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 
-const INITIAL_STATE = {
-    rightPanel : 'none'
-};
+const INITIAL_STATE = [];
 
 export default function tradeReducer(state = INITIAL_STATE, action){
     console.log("TradeReducer called: ", state, action);
 
-    switch(action.types){
+    switch(action.type){
         
         case ActionTypes.LOADING: {
             return Object.assign({}, state, {loading: action.payload.loading})
@@ -23,6 +21,10 @@ export default function tradeReducer(state = INITIAL_STATE, action){
 
         case ActionTypes.SHOW_RIGHT_PANEL: {
             return Object.assign({}, state, {rightPanel: action.payload.panelName})
+        }
+
+        case ActionTypes.SET_SELECTED: {
+            return Object.assign({}, state, {selected: action.payload.trade})
         }
 
         case ActionTypes.CREATE_TRADE: {

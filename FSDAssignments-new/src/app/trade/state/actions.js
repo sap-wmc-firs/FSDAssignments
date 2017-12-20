@@ -9,6 +9,16 @@ export const showRightPanel = (panelName) => {
         }
     }
 }
+
+export const setSelected = (trade) => {
+    return {
+        type:ActionTypes.SET_SELECTED,
+        payload: {
+            trade: trade
+        }
+    }
+}
+
 export const CreateTrade = (trade) => {
     return {
         type: ActionTypes.CREATE_TRADE,

@@ -18,9 +18,6 @@ export default class EditTrade extends Component{
     constructor(props){
         super(props);
         this.classes = props;
-        this.state ={
-            commodity: 'AL'
-        }
     }
     render(){
         return(
@@ -28,7 +25,7 @@ export default class EditTrade extends Component{
                 <AppBar position="static">
                     <Toolbar>
                         <Typography type="Subheading" color="secondary">
-                        Trade ID: 1001
+                        Trade ID: {this.props.trade.tradeId}
                         <Icon icon={bin} />
                         </Typography>
                     </Toolbar>
@@ -42,7 +39,7 @@ export default class EditTrade extends Component{
                                     id="tradeDate"
                                     label=""
                                     type="date"
-                                    defaultValue="23-03-2017"
+                                    defaultValue={this.props.trade.tradeDate}
                                     className={this.classes.textField}
                                     InputLabelProps={{
                                         shrink: true,
@@ -55,12 +52,13 @@ export default class EditTrade extends Component{
                             <TableCell>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Commodity</InputLabel> */}
-                                    <Select native defaultValue={10} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.commodityId} input={<Input id="uncontrolled-native" />}>
                                     <option value="" />
-                                    <option value={10}>AL</option>
-                                    <option value={20}>CU</option>
-                                    <option value={30}>Fe</option>
-                                    <option value={40}>Commodity1</option>
+                                    <option value={1}>AL</option>
+                                    <option value={2}>ZN</option>
+                                    <option value={3}>CU</option>
+                                    <option value={4}>AU</option>
+                                    <option value={5}>Ag</option>
                                     </Select>
                                 </FormControl>
                             </TableCell>
@@ -69,7 +67,7 @@ export default class EditTrade extends Component{
                             <TableCell>Side</TableCell>
                             <TableCell>
                                 <Radio
-                                    checked= "true" //{this.state.selectedValue === 'a'}
+                                    checked= {this.props.trade.side === 'Buy'}
                                     onChange={this.handleChange}
                                     value="a"
                                     name="radio button demo"
@@ -77,7 +75,7 @@ export default class EditTrade extends Component{
                                     label="Buy"
                                 /> Buy
                                 <Radio
-                                    checked={this.state.selectedValue === 'b'}
+                                    checked={this.props.trade.side === 'Sell'}
                                     onChange={this.handleChange}
                                     value="b"
                                     name="radio button demo"
@@ -91,12 +89,12 @@ export default class EditTrade extends Component{
                             <TableCell>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Counterparty</InputLabel> */}
-                                    <Select native defaultValue={20} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.counterPartyId} input={<Input id="uncontrolled-native" />}>
                                         <option value="" />
-                                        <option value={1}></option>
-                                        <option value={10}>Dollar</option>
-                                        <option value={20}>Ipsum</option>
-                                        <option value={30}>Amet</option>
+                                        <option value={101}>Lorem</option>
+                                        <option value={102}>Dolor</option>
+                                        <option value={103}>Ipsum</option>
+                                        <option value={104}>Amet</option>
                                     </Select>
                                     {/* <FormHelperText>Uncontrolled</FormHelperText> */}
                                     </FormControl>
@@ -110,7 +108,7 @@ export default class EditTrade extends Component{
                                     id="price"
                                     label=""
                                     type="text"
-                                    defaultValue="12345"
+                                    defaultValue={this.props.trade.price}
                                     className={this.classes.textField}
                                     InputLabelProps={{
                                         shrink: true,
@@ -123,12 +121,13 @@ export default class EditTrade extends Component{
                             <TableCell>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Location</InputLabel> */}
-                                    <Select native defaultValue={10} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.locationId} input={<Input id="uncontrolled-native" />}>
                                         <option value="" />
                                         <option value={1}></option>
-                                        <option value={10}>NY</option>
+                                        <option value={10}>SG</option>
                                         <option value={20}>LN</option>
-                                        <option value={30}>Location3</option>
+                                        <option value={30}>NY</option>
+                                        <option value={40}>DN</option>
                                     </Select>
                                 </FormControl>
                             </TableCell>

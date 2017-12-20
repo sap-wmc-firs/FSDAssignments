@@ -136,7 +136,7 @@ export default class CreateTrade extends Component{
                         </TableRow>
                     </TableBody>
                 </Table>
-                <Button raised  className={this.classes.button}>Cancel</Button>&emsp;
+                <Button raised  className={this.classes.button} onClick = {() => this.props.showRightPanel('none')}>Cancel</Button>&emsp;
                 <Button raised  className={this.classes.button}>Save</Button>
             </div> 
         )

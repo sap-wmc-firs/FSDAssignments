@@ -6,3 +6,4 @@ export const LOADING = 'TRADE.LOADING';
 export const INIT_ERROR = 'TRADE.INIT_ERROR';
 export const INIT_TRADES = 'TRADE.INIT_TRADES';
 export const SHOW_RIGHT_PANEL = 'TRADE.SHOW_RIGHT_PANEL';
+export const SET_SELECTED = 'TRADE.SET_SELECTED';

@@ -5,7 +5,7 @@ import tradeReducer from './trade/state/reducer';
 import { createStore } from 'redux';
 
 let rootReducer = combineReducers({
-    trades: tradeReducer
+    tradeState: tradeReducer
 })
 
 function loggerMiddleware(store){

@@ -22,8 +22,8 @@ export default class ShowTrade extends Component{
                 <AppBar position="static">
                     <Toolbar>
                         <Typography type="Subheading" color="secondary">
-                        Trade ID: 1001
-                        <Icon icon={pencil} />
+                        Trade ID: {this.props.trade.tradeId}
+                        <Icon icon={pencil} onClick={() => this.props.editAction()} />
                         <Icon icon={bin} />
                         </Typography>
                     </Toolbar>
@@ -32,27 +32,27 @@ export default class ShowTrade extends Component{
                     <TableBody>
                         <TableRow>
                             <TableCell>Trade Date</TableCell>
-                            <TableCell>23-03-2017</TableCell>
+                            <TableCell>{this.props.trade.tradeDate}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Commodity</TableCell>
-                            <TableCell>AL</TableCell>
+                            <TableCell>{this.props.trade.commodity}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Side</TableCell>
-                            <TableCell>Buy</TableCell>
+                            <TableCell>{this.props.trade.side}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Counterparty</TableCell>
-                            <TableCell>Dollar</TableCell>
+                            <TableCell>{this.props.trade.counterParty}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Price</TableCell>
-                            <TableCell>$1,860.75</TableCell>
+                            <TableCell>{this.props.trade.price}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Location</TableCell>
-                            <TableCell>NY</TableCell>
+                            <TableCell>{this.props.trade.locationId}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
