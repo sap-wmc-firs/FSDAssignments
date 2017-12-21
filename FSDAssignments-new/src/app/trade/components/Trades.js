@@ -14,7 +14,7 @@ import {bindActionCreators} from "redux";
 import * as actions from "../state/actions";
 
 
-class Trades extends Component{
+export default class Trades extends Component{
 
     constructor(props){
         super(props);
@@ -28,7 +28,6 @@ class Trades extends Component{
     }
 
     componentDidMount() {
-        
         const data = [
             {
               "tradeId": 1001,
@@ -112,10 +111,10 @@ class Trades extends Component{
         this.state.socket.on( 'trade added', ( socketData ) => {
             var respData = JSON.parse(socketData);
                if(respData.length > 0){
-                   respData.forEach(item =>{
+                   /*respData.forEach(item =>{
                        data.push(item);
-                   });
-                   this.props.actions.initTrades(data);
+                   });*/
+                   this.props.actions.initTrades(respData);
                }
         } );
 
@@ -162,23 +161,3 @@ Trades.defaultProps = {
 Trades.propTypes = {
     
 }
-
-const mapStateToProps = (state) => {
-    return {
-        rightPanel: state.tradeState.rightPanel,
-        selected: state.tradeState.selected,
-        trades: state.tradeState.trades,
-        loading: state.tradeState.loading,
-        error: state.tradeState.error,
-        errorMessage: state.tradeState.errorMessage
-    }
-}
-
- const mapDispatchToProps = (dispatch) => {
-    return {
-        actions: bindActionCreators(actions, dispatch),
-    }
-} 
-
-export default connect(mapStateToProps, 
-                    mapDispatchToProps) (Trades)

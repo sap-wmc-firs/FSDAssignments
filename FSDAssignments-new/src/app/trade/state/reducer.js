@@ -23,7 +23,9 @@ export default function tradeReducer(state = INITIAL_STATE, action){
         }
 
         case ActionTypes.INIT_TRADES: {
-            return Object.assign({}, state, {trades: action.payload.trades})
+            let trades = state.trades;
+            trades = trades.concat(action.payload.trades);
+            return Object.assign({}, state, {trades})
         }
 
         case ActionTypes.SHOW_RIGHT_PANEL: {
