@@ -23,7 +23,7 @@ exports.startConsumers = function(args, io){
           });
 
           ch.consume(q.queue, function(msg) {
-            io.in(TRADE_ADDED.channel).emit('trade added', msg);  
+            io.in(TRADE_ADDED.channel).emit('trade added', msg.content.toString());  
             console.log("trade queue");  
             console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
           }, {noAck: true});
@@ -42,7 +42,7 @@ exports.startConsumers = function(args, io){
           });
 
           ch.consume(q.queue, function(msg) {
-            io.in(MARKET_DATA_MODIFIED.channel).emit('trade added', msg); 
+            io.in(MARKET_DATA_MODIFIED.channel).emit('trade added', msg.content.toString()); 
             console.log("market data queue");  
             console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
           }, {noAck: true});

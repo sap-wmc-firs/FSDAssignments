@@ -1,6 +1,13 @@
 import * as ActionTypes from './ActionTypes';
 
-const INITIAL_STATE = [];
+const INITIAL_STATE = {
+    rightPanel: 'none',
+    selected: {},
+    trades: [],
+    loading: false,
+    error: false,
+    errorMessage: ''
+};
 
 export default function tradeReducer(state = INITIAL_STATE, action){
     console.log("TradeReducer called: ", state, action);

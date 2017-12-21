@@ -8,7 +8,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
 import Icon from 'react-icons-kit';
 import { user } from 'react-icons-kit/fa/user';
-import Trades from "../trade/container/Trades";
+import Trades from "../trade/container/TradesContainer";
 import Transfers from "./Transfers";
 import Transports from "./Transports";
 

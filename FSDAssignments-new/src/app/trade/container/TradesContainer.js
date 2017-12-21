@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-import Trades from "../components/trades";
+import Trades from "../components/Trades";
 import * as actions from "../state/actions";
 
 const mapStateToProps = (state) => {

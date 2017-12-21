@@ -8,13 +8,23 @@ import AddIcon from 'material-ui-icons/Add';
 import Search from "./Search";
 import TradeList from "./TradeList";
 
-export default class Trades extends Component{
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+
+import * as actions from "../state/actions";
+
+
+class Trades extends Component{
 
     constructor(props){
         super(props);
         this.state = {
             socket : null
         }
+    }
+    
+    componentWillReceiveProps(nextprops){
+        console.log(nextprops.trades);
     }
 
     componentDidMount() {
@@ -87,12 +97,12 @@ export default class Trades extends Component{
             }
           ];
         
-          this.state.socket = io( 'http://10.203.102.203:3030/notify_service' );
+        this.state.socket = io.connect( 'http://localhost:3030/' );
 
         // listen to messages on socket
         // built-in message
         this.state.socket.on( 'connect', () => {
-            this.state.socket.emit( 'join channel', 'dataUpdate', function( confirmation ) {
+            this.state.socket.emit( 'join channel', 'tradeAdded', function( confirmation ) {
                 console.log( confirmation );
             } );
         } );
@@ -100,8 +110,9 @@ export default class Trades extends Component{
                 alert( "There seems to be an issue with Data Notification Service! Please contact #FIIDS" );
         } );
         this.state.socket.on( 'trade added', ( socketData ) => {
-               if(socketData.length > 0){
-                   socketData.forEach(item =>{
+            var respData = JSON.parse(socketData);
+               if(respData.length > 0){
+                   respData.forEach(item =>{
                        data.push(item);
                    });
                    this.props.actions.initTrades(data);
@@ -122,6 +133,7 @@ export default class Trades extends Component{
 
 
     render(){
+        const {rightPanel, selected, trades} = this.props;
         return (
             <div>
                 <Search />
