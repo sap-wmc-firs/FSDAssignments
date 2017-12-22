@@ -1,6 +1,23 @@
 # FSDAssignment 
 ## App Metallica
 
+### API Gateway
+### Spring-boot with Zuul and consul
+Zuul is an edge service that provides dynamic routing, monitoring, resiliency, security, and more. In Metallica app it is being used as a API Gateway along with consul as the service discovery.
+
+This gateway once started registers itself with Consul server whose properties are to be defined in the project. Once done a user can request the routes defined in the same properties file.
+
+Steps to Deploy:-
+1) Import this project in Eclipse.
+2) Make the changes in properties file as and when required.
+3) Start the application from the main file. This service listens in on port 8084 by default.
+
+### Example:-
+If a route has been defined as following in the properties file:-
+zuul.routes.notificationservice.serviceId=notification-service
+
+Client has to hit:- http://localhost:8084/notificationservice to access the service
+
 ### Service registry/discovery
 #### Consul
 Consul has multiple components, but as a whole, it is a tool for discovering and configuring services in your infrastructure. We are using Consul for service registry/discovery part in Metallica app.
