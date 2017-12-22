@@ -14,6 +14,7 @@ Steps to Deploy:-
 
 ### Example:-
 If a route has been defined as following in the properties file:-
+
 zuul.routes.notificationservice.serviceId=notification-service
 
 Client has to hit:- http://localhost:8084/notificationservice to access the service
