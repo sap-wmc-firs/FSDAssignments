@@ -7,9 +7,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 var consul = require('consul') ({
-	host: '10.207.100.70',
+	host: '10.207.95.126',
 	port: 8500
 });
+
+//http://10.207.95.126:8500/ 
 
 app.set('json space', 2);
 app.enable('trust proxy');
@@ -43,7 +45,7 @@ app.post('/delete/trade', function(req, res){
 	deleteTradeServiceRequest(res, null, req.body);
 });
 
-http.listen(8080, function() {
+http.listen(8999, function() {
 	console.log('trade data service started...');
 	require('dns').lookup(require('os').hostname(), function (err, add, fam) {
 		if(err)	throw err;
