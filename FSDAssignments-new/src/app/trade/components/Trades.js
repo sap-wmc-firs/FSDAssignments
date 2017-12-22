@@ -111,15 +111,17 @@ export default class Trades extends Component{
         this.state.socket.on( 'trade added', ( socketData ) => {
             var respData = JSON.parse(socketData);
                if(respData.length > 0){
-                   /*respData.forEach(item =>{
-                       data.push(item);
-                   });*/
                    this.props.actions.initTrades(respData);
                }
         } );
+        this.state.socket.on( 'market data modified', ( socketData ) => {
+            var respData = JSON.parse(socketData);
+               if(respData.length > 0){
+                   // code to update market data price (element's price);
+               }
+        } );
 
-        
-          this.props.actions.initTrades(data);
+        this.props.actions.initTrades(data);
         //this.props.actions.fetchTradesAsync();
       }
 

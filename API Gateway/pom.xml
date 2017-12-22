@@ -6,7 +6,7 @@
 	<groupId>com.example.api.gateway</groupId>
 	<artifactId>MetallicaZuulService</artifactId>
 	<version>1.0.0.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>MetallicaZuulService</name>
 	<description>Demo project for Spring Boot</description>

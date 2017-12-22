@@ -42,7 +42,7 @@ exports.startConsumers = function(args, io){
           });
 
           ch.consume(q.queue, function(msg) {
-            io.in(MARKET_DATA_MODIFIED.channel).emit('trade added', msg.content.toString()); 
+            io.in(MARKET_DATA_MODIFIED.channel).emit('market data modified', msg.content.toString()); 
             console.log("market data queue");  
             console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
           }, {noAck: true});
