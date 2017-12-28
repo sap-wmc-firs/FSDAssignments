@@ -96,7 +96,7 @@ function getAllTradesServiceRequest(res, socket) {
                 });
             }
         } else {
-            db.collection('trades').find().toArray(function (err, mongoRes) {
+            db.collection('trades').find({}, {_id:0}).toArray(function (err, mongoRes) {
                 if (err) {
                     console.log(err.stack);
                     if (res) {
