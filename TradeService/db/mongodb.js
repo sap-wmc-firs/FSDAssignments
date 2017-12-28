@@ -8,7 +8,7 @@ class mongoDB{
 	console.log("in mongodb constructor");
 		this.mongoClient = mongodb.MongoClient;
 		this.ObjectID = mongodb.ObjectID;
-		this.mongoURL = `mongodb://127.0.0.1:27017/Mettalica`;
+		this.mongoURL = `mongodb://127.0.0.1:27017/metallica`;
 	}
 
 	onConnect(callback){
