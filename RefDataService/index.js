@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 var  consul  =  require('consul')({    
-    host:   '10.207.101.204',
+    host:   '127.0.0.1',
         port:  8500
 });
 
@@ -38,11 +38,11 @@ app.get('/entities/:type/:symbol', function (req, res) {
     handleRefServiceRequest(res, null, req.params.type, req.params.symbol.toUpperCase());
 });
 
-http.listen(8080, function () {
+http.listen(9998, function () {
     console.log('ref data service started...');
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
         if (err) throw err;
-        var healthCheckUrl = 'http://'+ add +':8080/servicehealth';  
+        var healthCheckUrl = 'http://'+ add +':9998/servicehealth';  
         console.log(healthCheckUrl)     
         consul.agent.service.register({
                 name: 'ref-data-service',

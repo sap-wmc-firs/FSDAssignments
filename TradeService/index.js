@@ -8,7 +8,7 @@ const cors = require('cors');
 const request = require('request');
 
 var consul = require('consul') ({
-	host: '10.207.100.70',
+	host: '127.0.0.1',
 	port: 8500
 });
 
@@ -48,7 +48,7 @@ http.listen(8999, function() {
 	console.log('trade data service started...');
 	require('dns').lookup(require('os').hostname(), function (err, add, fam) {
 		if(err)	throw err;
-        var healthCheckUrl = 'http://'+ add +':8080/serverhealth';  
+        var healthCheckUrl = 'http://'+ add +':8999/serverhealth';  
         console.log(healthCheckUrl)
         consul.agent.service.register({
             name: 'trade-data-service',

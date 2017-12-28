@@ -39,11 +39,11 @@ app.get('/api/:type/:symbol', function (req, res) {
     handleRefServiceRequest(res, null, req.params.type, req.params.symbol.toUpperCase(),null);
 });
 
-http.listen(8080, function () {
+http.listen(9898, function () {
     console.log('ref data service started...');
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
         if (err) throw err;
-        var healthCheckUrl = 'http://'+ add +':8080/servicehealth';  
+        var healthCheckUrl = 'http://'+ add +':9898/servicehealth';  
         console.log(healthCheckUrl)     
         consul.agent.service.register({
                 name: 'metal-price-service',
