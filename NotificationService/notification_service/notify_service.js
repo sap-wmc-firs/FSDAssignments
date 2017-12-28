@@ -78,5 +78,7 @@ consul.agent.service.register({
 		deregistercriticalserviceafter: '15s'  //deregister threshold
 	}
 }, function(err) {
-      if (err) throw err;
+      if (err) {
+		//throw err;
+	  }
 });

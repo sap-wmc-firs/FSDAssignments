@@ -5,13 +5,12 @@ const io = require('socket.io')(http);
 const mongoDB = require('./db/mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const request = require('request');
 
 var consul = require('consul') ({
-	host: '10.207.95.126',
+	host: '10.207.100.70',
 	port: 8500
 });
-
-//http://10.207.95.126:8500/ 
 
 app.set('json space', 2);
 app.enable('trust proxy');
@@ -111,6 +110,7 @@ function getAllTradesServiceRequest(res, socket) {
                     if (mongoRes.length > 0) {
                         var data = JSON.stringify(mongoRes);
                         console.log(data);
+						sendDataToNotificationService(data);
                         if (res) {
                             res.end(data);
                         } else {
@@ -194,7 +194,7 @@ function updateTradeServiceRequest(res, socket, req) {
 							db.close();
 						}else{
 							tradeId = output.value.seq;
-							db.collection("trades").insert({
+							var obj = {
 								 tradeId: tradeId,
 								 side: side,
 								 quantity: quantity,
@@ -204,7 +204,8 @@ function updateTradeServiceRequest(res, socket, req) {
 								 counterParty: counterParty,
 								 commodity: commodity,
 								 location: location
-							}, function(err, res) {
+							};
+							db.collection("trades").insert(obj, function(err, res) {
 								if (err) {
 									message = err;
 								}
@@ -213,6 +214,7 @@ function updateTradeServiceRequest(res, socket, req) {
 								}
 								db.close();
 							});
+							sendDataToNotificationService(obj);
 						}
 					});			
 					if (res) {
@@ -238,9 +240,7 @@ function updateTradeServiceRequest(res, socket, req) {
 					}
 				}
 				else {
-					db.collection("trades").update(
-					   { tradeId: req.tradeId},
-					   {
+					var obj = {
 						 tradeId: req.tradeId,
 						 side: side,
 						 quantity: quantity,
@@ -250,9 +250,13 @@ function updateTradeServiceRequest(res, socket, req) {
 						 counterParty: counterParty,
 						 commodity: commodity,
 						 location: location
-					   }
+					};
+					db.collection("trades").update(
+					   { tradeId: req.tradeId},
+							obj
 					)
 					var successMessage = "trade updated.";
+					sendDataToNotificationService(obj);
 					if (res) {
                         res.end(successMessage);
                     } else {
@@ -273,6 +277,20 @@ function updateTradeServiceRequest(res, socket, req) {
 			});
 		}
 	}
+}
+
+function sendDataToNotificationService(obj) {
+	var options = {
+		url : "http://localhost:3000/api/addTradeToQueue",
+		method : 'POST',
+		json : obj
+	};
+	console.log("sending request to notification now.");
+	request(options, function(error, response, body) {
+		console.log(error);
+		console.log(response);
+		console.log(body);
+	});
 }
 
 function deleteTradeServiceRequest(res, socket, req) {
