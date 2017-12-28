@@ -1,0 +1,22 @@
+{
+  "name": "mettalica-refservice",
+  "version": "1.0.0",
+  "description": "Reference Data sercice for mettalica",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vandana",
+  "license": "ISC",
+  "dependencies": {
+    "activedirectory": "^0.7.2",
+    "body-parser": "^1.18.2",
+    "consul": "^0.30.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "mongodb": "^2.2.33",
+    "request": "^2.83.0",
+    "socket.io": "^2.0.4",
+    "winston": "^2.4.0"
+  }
+}
