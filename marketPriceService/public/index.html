@@ -8,14 +8,8 @@
    <script>
       var socket = io();
       setTimeout(function(){
-        socket.emit('REFENTITY', {entity: 'locations'});
-      },1000);
-      setTimeout(function(){
         socket.emit('REFENTITY', {entity: 'commodities'});
-      },3000);
-      setTimeout(function(){
-        socket.emit('REFENTITY', {entity: 'counterparties'});
-      },5000);
+      },1000);
       socket.on('REFENTITY', function(res){
           document.write("<h4>"+ res.entity +"</h4>" + res.data + "<br/><br/><br/>");
       });

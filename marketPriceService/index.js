@@ -19,25 +19,22 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+var priceRefreshInterval = 30 * 1000; // 30 seconds
+var priceBracket = {
+    "min" : 1000,
+    "max" : 1600
+};
 
 
 app.get('/servicehealth', function (req, res) {
     res.end('healthy...');
 });
 
-// REST ENDPOINTS
+// REST API ENDPOINTS
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-//locations
-app.get('/api/:type', function (req, res) {
-    handleRefServiceRequest(res, null, req.params.type, null,null);
-});
-
-app.get('/api/:type/:symbol', function (req, res) {
-    handleRefServiceRequest(res, null, req.params.type, req.params.symbol.toUpperCase(),null);
-});
 
 http.listen(9898, function () {
     console.log('ref data service started...');
@@ -49,7 +46,7 @@ http.listen(9898, function () {
                 name: 'metal-price-service',
                 id: 'metal-price-service',
             address:add,
-            port:8080,
+            port:9898,
                 check: {
                     http: healthCheckUrl,
                     interval: "5s",     
@@ -98,37 +95,48 @@ function postUpdateToNotificationService(dataToSend){
     })
          
 }
+
 function UpdatePrice(){
     
 }
+
 function getDataFromMongoDb(){
     var data=null;
-    dbInstance.collection('MetalPrice').find().toArray(function (err, results) {
-        if (results.length > 0) {
-           data =JSON.stringify(results);
-           postUpdateToNotificationService(data);
-          }
+    console.log(priceBracket.min);
+    console.log(priceBracket.max);
+    dbInstance.collection('commodities').find().toArray(function (err, results) {
+     if (results.length > 0) {
+         var index = 0;
+         for (;index < results.length; index++) { 
+             var rs = results[index];
+             var priceVal = Math.floor(Math.random() * (priceBracket.max - priceBracket.min)) + priceBracket.min;
+             rs.price = priceVal;
+         }
          
+           data = JSON.stringify(results);
+           console.log(data);
+           postUpdateToNotificationService(data);
+     } else {
+        console.log("Metadata not available.");
+     }
         
 });
 
 }
+
 function connectToMongoDb(){
     mongoDB.onConnect(function (err, db, objectId) {
         if (err) {
             console.log(err.stack);
- 
-            
         } else {
-            dbInstance=db;
-                       
-setInterval(function(){
-     getDataFromMongoDb()
-    
-},1000);
-        }
-});
+            dbInstance = db;
+            setInterval(function(){
+               getDataFromMongoDb()
+            }, priceRefreshInterval);
+         }
+    });
 }
+
 function handleRefServiceRequest(res, socket, entity, symbol) {
     console.log('entity symbol - ' + symbol);
     var query = symbol ? {
