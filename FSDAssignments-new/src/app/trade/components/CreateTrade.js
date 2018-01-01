@@ -180,9 +180,9 @@ import styles from "../../../assets/app.css";
                                 <Radio
                                     ref="sideCT"
                                     id="sideCT"
-                                    checked={this.state.side === 'BUY'}
+                                    checked={this.state.side === 'Buy'}
                                     onChange={this.handleChange}
-                                    value="BUY"
+                                    value="Buy"
                                     name="side"
                                     aria-label="Buy"
                                     label="Buy"
@@ -190,9 +190,9 @@ import styles from "../../../assets/app.css";
                                 <Radio
                                     id="sideCT"
                                     ref="sideCT"
-                                    checked={this.state.side === 'SELL'}
+                                    checked={this.state.side === 'Sell'}
                                     onChange={this.handleChange}
-                                    value="SELL"
+                                    value="Sell"
                                     name="side"
                                     aria-label="Sell"
                                     label="Sell"
