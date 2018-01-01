@@ -1,5 +1,10 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
+
+import Grid from "react-bootstrap/lib/Grid";
+import Row from "react-bootstrap/lib/Row";
+import Col from "react-bootstrap/lib/Col";
+
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
@@ -18,7 +23,7 @@ const styles = theme => ({
     },
     table: {
       minWidth: 700,
-    },
+    }
   });
 
 
@@ -60,66 +65,83 @@ const styles = theme => ({
       }
 
       const showRightPanel = this.props.rightPanel;
+      const tableColSize = () => {
+        if(showRightPanel === 'showTrade' || showRightPanel === 'createTrade' || showRightPanel === 'editTrade')
+          return 9;
+        else
+          return 12;
+      }
+      const tableRowColSize = () => {
+        if (tableColSize() === 9)
+          return 'col-md-9';
+        else
+          return 'col-md-12';
+      }
 
       return (
         <div>
-        <Paper className={this.classes.root}>
-          <Table className={this.classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Trade Date</TableCell>
-                <TableCell>Commodity</TableCell>
-                <TableCell>Side</TableCell>
-                <TableCell>Qty (MT)</TableCell>
-                <TableCell>Price (/MT)</TableCell>
-                <TableCell>Counterparty</TableCell>
-                <TableCell>Location</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.props.trades.map(n => {
-                const isSelected = this.isSelected(n.tradeId);
-                return (
-                  <TableRow 
-                  hover
-                  onClick={event => this.loadShowPanel(event, n)}
-                  //onKeyDown={event => this.handleKeyDown(event, n.id)}
-                  //role="checkbox"
-                  //aria-checked={isSelected}
-                  tabIndex={-1}
-                  selected={isSelected} 
-                  key={n.id}>
-                    <TableCell>{n.tradeDate}</TableCell>
-                    <TableCell>{n.commodity}</TableCell>
-                    <TableCell>{n.side}</TableCell>
-                    <TableCell>{n.qty}</TableCell>
-                    <TableCell>{n.price}</TableCell>
-                    <TableCell>{n.counterParty}</TableCell>
-                    <TableCell>{n.location}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell><Button fab color="primary" aria-label="add" onClick={ () => this.props.showRightPanel('createTrade') }>
-                      <AddIcon />
-                  </Button></TableCell>
-                  
-                </TableRow>
-            </TableFooter>
-          </Table>
-        </Paper>
-
-        {showRightPanel === 'showTrade' && <ShowTrade trade = {this.props.selected} editAction = { () => this.loadEditPanel()} />}
-        {showRightPanel === 'createTrade' && <CreateTrade showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
-        {showRightPanel === 'editTrade' && <EditTrade trade = {this.props.selected} />}
+          <Row>
+            <Col md= {tableColSize()} xs={12}>
+              <Paper className={this.classes.root}>
+                <Table className={this.classes.table}>
+                  <TableHead>
+                    <TableRow >
+                      <TableCell>Trade Date</TableCell>
+                      <TableCell>Commodity</TableCell>
+                      <TableCell>Side</TableCell>
+                      <TableCell>Qty (MT)</TableCell>
+                      <TableCell>Price (/MT)</TableCell>
+                      <TableCell>Counterparty</TableCell>
+                      <TableCell>Location</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {this.props.trades.map(n => {
+                      const isSelected = this.isSelected(n.tradeId);
+                      return (
+                        <TableRow 
+                        hover
+                        onClick={event => this.loadShowPanel(event, n)}
+                        //onKeyDown={event => this.handleKeyDown(event, n.id)}
+                        //role="checkbox"
+                        //aria-checked={isSelected}
+                        tabIndex={-1}
+                        selected={isSelected} 
+                        key={n.id}>
+                          <TableCell>{n.tradeDate}</TableCell>
+                          <TableCell>{n.commodity}</TableCell>
+                          <TableCell>{n.side}</TableCell>
+                          <TableCell>{n.qty}</TableCell>
+                          <TableCell>{n.price}</TableCell>
+                          <TableCell>{n.counterParty}</TableCell>
+                          <TableCell>{n.location}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                  <TableFooter>
+                      <TableRow>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell><Button fab color="primary" aria-label="add" onClick={ () => this.props.showRightPanel('createTrade') }>
+                            <AddIcon />
+                        </Button></TableCell>
+                        
+                      </TableRow>
+                  </TableFooter>
+                </Table>
+              </Paper>
+            </Col>
+            <Col md={3} xs={12}>
+              {showRightPanel === 'showTrade' && <ShowTrade trade = {this.props.selected} editAction = { () => this.loadEditPanel()} />}
+              {showRightPanel === 'createTrade' && <CreateTrade showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
+              {showRightPanel === 'editTrade' && <EditTrade trade = {this.props.selected} />}
+            </Col>
+          </Row>
         </div>
       );
     }

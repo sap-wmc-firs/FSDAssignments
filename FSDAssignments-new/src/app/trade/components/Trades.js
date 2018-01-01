@@ -1,5 +1,9 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
+
+import Grid from "react-bootstrap/lib/Grid";
+import Row from "react-bootstrap/lib/Row";
+
 import io from 'socket.io-client';
 
 import Button from 'material-ui/Button';
@@ -137,7 +141,10 @@ export default class Trades extends Component{
         const {rightPanel, selected, trades} = this.props;
         return (
             <div>
+                <Row>
                 <Search />
+                </Row>
+                <Row>
                 <TradeList 
                     rightPanel = {this.props.rightPanel}
                     selected = {this.props.selected}
@@ -145,7 +152,8 @@ export default class Trades extends Component{
                     trades = {this.props.trades}
                     showRightPanel = {(panelName) => this.showRightPanel(panelName)}
                 ></TradeList>
-            </div>
+                </Row>
+                </div>
         );
         
     }

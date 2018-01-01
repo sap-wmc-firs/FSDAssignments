@@ -13,12 +13,14 @@
   "dependencies": {
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-polyfill": "^6.26.0",
+    "css-loader": "^0.28.7",
     "html-webpack-plugin": "^2.30.1",
     "jquery": "^3.2.1",
     "material-ui": "^1.0.0-beta.23",
     "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.2.0",
     "react-icons-kit": "^1.0.7",
     "react-redux": "^5.0.6",
@@ -26,6 +28,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "socket.io": "^2.0.1",
+    "style-loader": "^0.19.1",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

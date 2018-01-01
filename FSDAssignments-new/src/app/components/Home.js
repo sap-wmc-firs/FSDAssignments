@@ -1,5 +1,9 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
+
+import Grid from "react-bootstrap/lib/Grid";
+import Row from "react-bootstrap/lib/Row";
+
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -50,18 +54,18 @@ import Transports from "./Transports";
 
             return (
               <div className={this.classes.root}>
-                <AppBar position="static">
-                  <Tabs value={tab} onChange={this.handleChange}>
-                    <Tab value="trades" label="TRADES" />
-                    <Tab value="transfers" label="TRANSFERS" />
-                    <Tab value="transports" label="TRANSPORTS" />
-                    <div>Shubha <Icon icon={user}/></div>
-                  </Tabs> 
-                </AppBar>
+                  <AppBar position="static">
+                    <Tabs value={tab} onChange={this.handleChange}>
+                      <Tab value="trades" label="TRADES" />
+                      <Tab value="transfers" label="TRANSFERS" />
+                      <Tab value="transports" label="TRANSPORTS" />
+                      <div>Shubha <Icon icon={user}/></div>
+                    </Tabs> 
+                  </AppBar>
                 
-                {tab === 'trades' && <TabContainer><Trades /></TabContainer>}
-                {tab === 'transfers' && <TabContainer><Transfers /></TabContainer>}
-                {tab === 'transports' && <TabContainer><Transports /></TabContainer>}
+                  {tab === 'trades' && <TabContainer><Trades /></TabContainer>}
+                  {tab === 'transfers' && <TabContainer><Transfers /></TabContainer>}
+                  {tab === 'transports' && <TabContainer><Transports /></TabContainer>}
               </div>
             );
           }
