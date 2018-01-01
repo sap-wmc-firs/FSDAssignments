@@ -21,25 +21,123 @@ import Button from 'material-ui/Button';
     },
   });
 
+  
+  function clear(){
+    console.log("clear method");
+  }
 
+  function search(){
+    console.log("search method");
+  }
 
   function Search(props) {
     const { classes } = props;
 
-    const {status } = {
-        checkedA: true,
-        checkedB: false,
-        checkedF: true,
-        checkedG: true,
+    const commodityData = [
+      {
+          "commodityId": 1,
+          "commodity": "AL",
+      },
+      {
+          "commodityId": 2,
+          "commodity": "ZN",
+      },
+      {
+          "commodityId": 3,
+          "commodity": "CU",
+      },
+      {
+          "commodityId": 4,
+          "commodity": "AU",
+      },
+      {
+          "commodityId": 5,
+          "commodity": "AG",
+      }
+    ]
+
+    const locationData = [
+        {
+            "locationId": 10,
+            "location": "SG"
+        },
+        {
+            "locationId": 20,
+            "location": "LN"
+        },
+        {
+            "locationId": 30,
+            "location": "NY"
+        },
+        {
+            "locationId": 40,
+            "location": "DN"
+        }
+    ]
+
+    const counterPartyData = [
+      {
+          "counterPartyId": 101,
+          "counterParty": "Lorem"
+      },
+      {
+          "counterPartyId": 102,
+          "counterParty": "Dolor"
+      },
+      {
+          "counterPartyId": 103,
+          "counterParty": "Ipsum"
+      },
+      {
+          "counterPartyId": 104,
+          "counterParty": "Amet",
+      }
+    ]
+
+    const priceData  = [
+      {
+          "commodityId": 1,
+          "locationId": 10,
+          "price": 1234.45
+      },
+      {
+          "commodityId": 2,
+          "locationId": 10,
+          "price": 4321.45
+      },
+      {
+          "commodityId": 3,
+          "locationId": 10,
+          "price": 5678.45
+      },
+      {
+          "commodityId": 4,
+          "locationId": 10,
+          "price": 8755.45
+      },
+      {
+          "commodityId": 5,
+          "locationId": 10,
+          "price": 5863.45
+      }
+    ]
+
+
+    const state = {
+        "priceData": priceData,
+        "counterPartyData": counterPartyData,
+        "locationData": locationData,
+        "commodityData": commodityData,
+        "side": "Buy"
       };
   
     return (
       <form className={classes.container} noValidate>
         <TextField
-          id="tradeDate"
+          id="tradeDateSearch"
           label="Trade Date"
           type="date"
-          defaultValue="2017-03-22"
+          defaultValue=""
           className={classes.textField}
           InputLabelProps={{
             shrink: true,
@@ -47,10 +145,10 @@ import Button from 'material-ui/Button';
         /> 
         to
         <TextField
-          id="toTradeDate"
-          label="To TradeDate"
+          id="toTradeDateSearch"
+          label="To Trade Date"
           type="date"
-          defaultValue="2017-03-22"
+          defaultValue=""
           className={classes.textField}
           InputLabelProps={{
             shrink: true,
@@ -58,24 +156,27 @@ import Button from 'material-ui/Button';
         />
         &emsp;
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="uncontrolled-native">Commodity</InputLabel>
-          <Select native defaultValue={30} input={<Input id="uncontrolled-native" />}>
-            <option value="" />
-            <option value={10}>AL</option>
-            <option value={20}>CU</option>
-            <option value={30}>Fe</option>
-            <option value={40}>Commodity1</option>
+          <InputLabel htmlFor="commoditySearch">Commodity</InputLabel>
+          <Select native defaultValue={0} input={<Input id="commoditySearch" />}>
+            <option value="0" />
+            {
+                state.commodityData.map( n => {
+                    return (
+                        <option value={n.commodityId}>{n.commodity}</option>
+                    );
+                })
+            }
           </Select>
         </FormControl>
         &emsp;
         <FormGroup row>
-        {/* <InputLabel htmlFor="uncontrolled-native">Side</InputLabel> */}
+        {/* <InputLabel htmlFor="sideSearch">Side</InputLabel> */}
         <FormControlLabel
           control={
             <Checkbox
-              checked="true"
-              onChange=""
-              value="checkedA"
+              checked={state.side === 'Buy'}
+              onChange={() => state.side='Buy'}
+              value="Buy"
             />
           }
           label="Buy"
@@ -83,9 +184,9 @@ import Button from 'material-ui/Button';
         <FormControlLabel
           control={
             <Checkbox
-              checked="false"
-              onChange=""
-              value="checkedB"
+              checked={state.side === 'Sell'}
+              onChange={() => state.side='Sell'}
+              value="Sell"
             />
           }
           label="Sell"
@@ -93,29 +194,35 @@ import Button from 'material-ui/Button';
         </FormGroup>
         &emsp;
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="uncontrolled-native">Counterparty</InputLabel>
-          <Select native defaultValue={1} input={<Input id="uncontrolled-native" />}>
-            <option value="" />
-            <option value={1}></option>
-            <option value={10}>Counterparty1</option>
-            <option value={20}>Counterparty2</option>
-            <option value={30}>Counterparty3</option>
+          <InputLabel htmlFor="counterpartySearch">Counterparty</InputLabel>
+          <Select native defaultValue={0} input={<Input id="counterpartySearch" />}>
+          <option value="0" />
+          {
+              state.counterPartyData.map( n => {
+                  return (
+                      <option value={n.counterPartyId}>{n.counterParty}</option>
+                  );
+              })
+          }
           </Select>
           {/* <FormHelperText>Uncontrolled</FormHelperText> */}
         </FormControl>
         &emsp;
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="uncontrolled-native">Location</InputLabel>
-          <Select native defaultValue={1} input={<Input id="uncontrolled-native" />}>
-            <option value="" />
-            <option value={1}></option>
-            <option value={10}>Location1</option>
-            <option value={20}>Location2</option>
-            <option value={30}>Location3</option>
+          <InputLabel htmlFor="locationSearch">Location</InputLabel>
+          <Select native defaultValue={0} input={<Input id="locationSearch" />}>
+          <option value="0" />
+          {
+              state.locationData.map( n => {
+                  return (
+                      <option value={n.locationId}>{n.location}</option>
+                  );
+              })
+          }
           </Select>
         </FormControl>
-        <Button className={classes.button}>clear</Button>
-        <Button className={classes.button}>Search</Button>
+        <Button className={classes.button} onClick={clear}>clear</Button>
+        <Button className={classes.button} onClick={search}>Search</Button>
       </form>
     );
   }
@@ -125,63 +232,3 @@ import Button from 'material-ui/Button';
   };
   
   export default withStyles(styles)(Search);
-// export default class Search extends Component{
-//     render(){
-//         return(
-//             <div>
-//                 <table>
-//                     <tr>
-//                         <th>Trade Date</th>
-//                         <th>Commodity</th>
-//                         <th>Side</th>
-//                         <th>Counterparty</th>
-//                         <th>Location</th>
-//                     </tr>
-//                     <tr>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                     </tr>
-//                 </table>
-//                 <form className={classes.container} noValidate>
-//                     <TextField
-//                         id="date"
-//                         label="Birthday"
-//                         type="date"
-//                         defaultValue="2017-05-24"
-//                         className={classes.textField}
-//                         InputLabelProps={{
-//                         shrink: true,
-//                         }}
-//                     />
-//                 </form>
-//                 <form>
-//                     <label>Trade Date</label>
-//                     <input type="date" />to<input type="date" />
-//                     <label>Commodity</label>
-//                     <select>
-//                         <option>All</option>
-//                     </select>
-//                     <label>Side</label>
-//                     <input type="checkbox" />Buy
-//                     <input type="checkbox" />Sell
-//                     <label>Counterparty</label>
-//                     <select>
-//                         <option>A</option>
-//                         <option>B</option>
-
-//                     </select>
-//                     <label>Location</label>
-//                     <select>
-//                         <option>Ggn</option>
-//                         <option>Noida</option>
-//                     </select>
-//                     <a href ="#">CLEAR</a> <a href="#">SEARCH</a>
-//                 </form>
-                
-//             </div>
-//         )
-//     }
-// }

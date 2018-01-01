@@ -115,7 +115,7 @@ import styles from "../../../assets/app.css";
             "counterPartyData": counterPartyData,
             "locationData": locationData,
             "commodityData": commodityData,
-            "side": "BUY"
+            "side": "Buy"
 
         }
     }
@@ -162,14 +162,14 @@ import styles from "../../../assets/app.css";
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Commodity</InputLabel> */}
                                     <Select native defaultValue={0} input={<Input ref="commodityCT" id="commodityCT" />}>
-                                    <option value="" />
-                                    {
-                                         this.state.commodityData.map( n => {
-                                            return (
-                                                <option value={n.commodityId}>{n.commodity}</option>
-                                            );
-                                        })
-                                    }
+                                        <option value="" />
+                                        {
+                                            this.state.commodityData.map( n => {
+                                                return (
+                                                    <option value={n.commodityId}>{n.commodity}</option>
+                                                );
+                                            })
+                                        }
                                     </Select>
                                 </FormControl>
                             </td>

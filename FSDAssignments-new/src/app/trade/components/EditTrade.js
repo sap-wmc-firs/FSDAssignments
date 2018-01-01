@@ -113,7 +113,7 @@ export default class EditTrade extends Component{
             "counterPartyData": counterPartyData,
             "locationData": locationData,
             "commodityData": commodityData,
-            "side": "BUY"
+            "side": "Buy"
 
         }
     }
@@ -139,7 +139,7 @@ export default class EditTrade extends Component{
                             <td>Trade Date</td>
                             <td>
                                 <TextField
-                                    id="tradeDate"
+                                    id="tradeDateET"
                                     label=""
                                     type="date"
                                     defaultValue={this.props.trade.tradeDate}
@@ -155,7 +155,7 @@ export default class EditTrade extends Component{
                             <td>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Commodity</InputLabel> */}
-                                    <Select native defaultValue={this.props.trade.commodityId} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.commodityId} input={<Input id="commodityET" />}>
                                         {
                                             this.state.commodityData.map( n => {
                                             return (
@@ -173,16 +173,18 @@ export default class EditTrade extends Component{
                                 <Radio
                                     checked= {this.props.trade.side === 'Buy'}
                                     onChange={this.handleChange}
-                                    value="a"
-                                    name="radio button demo"
-                                    aria-label="A"
+                                    value="Buy"
+                                    name="side"
+                                    id="sideET"
+                                    aria-label="Buy"
                                     label="Buy"
                                 /> Buy
                                 <Radio
                                     checked={this.props.trade.side === 'Sell'}
                                     onChange={this.handleChange}
-                                    value="b"
-                                    name="radio button demo"
+                                    value="Sell"
+                                    name="side"
+                                    id="sideET"
                                     aria-label="B"
                                     label="Sell"
                                 /> Sell
@@ -193,7 +195,7 @@ export default class EditTrade extends Component{
                             <td>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Counterparty</InputLabel> */}
-                                    <Select native defaultValue={this.props.trade.counterPartyId} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.counterPartyId} input={<Input id="counterPartyET" />}>
                                         {
                                             this.state.counterPartyData.map( n => {
                                                 return (
@@ -210,7 +212,7 @@ export default class EditTrade extends Component{
                         <tr>
                             <td>Price</td>
                             <td>
-                                <div id="priceCT" ref="priceCT"> {'$1234.45 USD'}</div>
+                                <div id="priceET" ref="priceET"> {'$1234.45 USD'}</div>
                             </td>
                         </tr>
                         <tr>
@@ -218,7 +220,7 @@ export default class EditTrade extends Component{
                             <td>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Location</InputLabel> */}
-                                    <Select native defaultValue={this.props.trade.locationId} input={<Input id="uncontrolled-native" />}>
+                                    <Select native defaultValue={this.props.trade.locationId} input={<Input id="locationET" />}>
                                         {
                                             this.state.locationData.map( n => {
                                                 return (
