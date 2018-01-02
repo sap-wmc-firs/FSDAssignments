@@ -138,8 +138,8 @@ const styles = theme => ({
             </Col>
             <Col md={3} xs={12}>
               {showRightPanel === 'showTrade' && <ShowTrade trade = {this.props.selected} editAction = { () => this.loadEditPanel()} />}
-              {showRightPanel === 'createTrade' && <CreateTrade showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
-              {showRightPanel === 'editTrade' && <EditTrade trade = {this.props.selected} showRightPanel = {(panelName) => this.props.showRightPanel(panelName)} />}
+              {showRightPanel === 'createTrade' && <CreateTrade isEditable='false' trade = {this.props} showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
+              {showRightPanel === 'editTrade' && <CreateTrade isEditable='true' trade = {this.props.selected} showRightPanel = {(panelName) => this.props.showRightPanel(panelName)}/>}
             </Col>
           </Row>
         </div>

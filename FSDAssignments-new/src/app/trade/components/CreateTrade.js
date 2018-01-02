@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
+import io from 'socket.io-client';
+import Icon from 'react-icons-kit';
+import { bin } from 'react-icons-kit/icomoon/bin';
 
 import TextField from 'material-ui/TextField';
 import Input, { InputLabel } from 'material-ui/Input';
@@ -12,133 +16,110 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 
-import styles from "../../../assets/app.css";
 
-
-  export default class CreateTrade extends Component{
+export default class CreateTrade extends Component{
 
     constructor(props){
         super(props);
-        this.classes = props;        
-
-        const commodityData = [
-            {
-                "commodityId": 1,
-                "commodity": "AL",
-            },
-            {
-                "commodityId": 2,
-                "commodity": "ZN",
-            },
-            {
-                "commodityId": 3,
-                "commodity": "CU",
-            },
-            {
-                "commodityId": 4,
-                "commodity": "AU",
-            },
-            {
-                "commodityId": 5,
-                "commodity": "AG",
-            }
-        ]
-
-        const locationData = [
-            {
-                "locationId": 10,
-                "location": "SG"
-            },
-            {
-                "locationId": 20,
-                "location": "LN"
-            },
-            {
-                "locationId": 30,
-                "location": "NY"
-            },
-            {
-                "locationId": 40,
-                "location": "DN"
-            }
-        ]
-
-        const counterPartyData = [
-            {
-                "counterPartyId": 101,
-                "counterParty": "Lorem"
-            },
-            {
-                "counterPartyId": 102,
-                "counterParty": "Dolor"
-            },
-            {
-                "counterPartyId": 103,
-                "counterParty": "Ipsum"
-            },
-            {
-                "counterPartyId": 104,
-                "counterParty": "Amet",
-            }
-        ]
-
-        const priceData  = [
-            {
-                "commodityId": 1,
-                "locationId": 10,
-                "price": 1234.45
-            },
-            {
-                "commodityId": 2,
-                "locationId": 10,
-                "price": 4321.45
-            },
-            {
-                "commodityId": 3,
-                "locationId": 10,
-                "price": 5678.45
-            },
-            {
-                "commodityId": 4,
-                "locationId": 10,
-                "price": 8755.45
-            },
-            {
-                "commodityId": 5,
-                "locationId": 10,
-                "price": 5863.45
-            }
-        ]
-
+        this.classes = props;
         this.state ={
-            "priceData": priceData,
-            "counterPartyData": counterPartyData,
-            "locationData": locationData,
-            "commodityData": commodityData,
-            "side": "Buy"
-
+            commodities : [],
+            locations: [],
+            counterParties: [],
+            price: '',
+            elements:{},
+            trade:{commodity:'',location:'',counterParty:''}
         }
     }
-
-    componentDidMount() {
+    
+    componentDidMount(){
+        fetch("http://localhost:9998/entities/locations")
+            .then(response=>{
+            response.json().then(data=> {
+                console.log(data);
+                this.setState({locations:data});
+              });
+        }); 
+        fetch("http://localhost:9998/entities/counterparties")
+            .then(response=>{
+            response.json().then(data=> {
+                console.log(data);
+                this.setState({counterParties:data});
+              });
+        }); 
+        fetch("http://localhost:9998/entities/commodities")
+            .then(response=>{
+            response.json().then(data=> {
+                console.log(data);
+                this.setState({commodities:data});
+                var elements = {};
+                data.forEach(item=>{
+                    elements[item.symbol] = item.price;
+                })
+                this.setState({elements:elements, price:elements[this.state.commodities[0].symbol]});
+              });
+        }); 
+        fetch("http://localhost:9898/metalPrice")
+            .then(response=>{
+            response.json().then(data=> {
+                console.log(data);
+                var elements = {};
+                data.forEach(item=>{
+                    elements[item.symbol] = item.price;
+                })
+                this.setState({elements:elements});
+            });
+        }); 
+        if(this.props.isEditable == 'true'){
+            this.setState({trade: this.props.trade})
+        }
         
-    }
+        this.state.socket = io.connect( 'http://localhost:3030/' );
 
-    saveTrade() {
-        //ToDo 
+        this.state.socket.on( 'connect', () => {
+            this.state.socket.emit( 'join channel', 'marketDataModified', function( confirmation ) {
+                console.log( confirmation );
+            } );
+        } );
+        this.state.socket.on( 'connect_error', () => {
+                //alert( "There seems to be an issue with Data Notification Service! Please contact #FIIDS" );
+        } );
+        this.state.socket.on( 'market data modified', ( socketData ) => {
+            var respData = JSON.parse(socketData);
+               if(respData.length > 0){
+                   var elements = {};
+                   respData.forEach(item=>{
+                        elements[item.symbol] = item.price;
+                   });
+                   this.setState({elements:elements});
+               }
+        } );
+    }
+    
+    setPriceValue(event){
+        this.setState({price:this.state.elements[event.target.value]});
     }
 
     render(){
         return(
              <div> 
                  <AppBar position="static">
+            
                     <Toolbar>
-                        <Typography type="Subheading" color="secondary">
+                        {this.props.isEditable == 'true'
+            ?
+            <Typography type="Subheading" color="secondary">
+                        Trade ID: {this.props.trade.tradeId}
+                        <Icon icon={bin} />
+                        </Typography>
+            :
+            <Typography type="Subheading" color="secondary">
                         Create Trade
                         </Typography>
+            }
                     </Toolbar>
                 </AppBar>
-                <table>
+               <table>
                     <body>
                         <tr>
                             <td>Trade Date</td>
@@ -160,19 +141,20 @@ import styles from "../../../assets/app.css";
                             <td>Commodity</td>
                             <td>
                                 <FormControl className={this.classes.formControl}>
-                                    {/* <InputLabel htmlFor="uncontrolled-native">Commodity</InputLabel> */}
-                                    <Select native defaultValue={0} input={<Input ref="commodityCT" id="commodityCT" />}>
-                                        <option value="" />
-                                        {
-                                            this.state.commodityData.map( n => {
-                                                return (
-                                                    <option value={n.commodityId}>{n.commodity}</option>
-                                                );
-                                            })
-                                        }
-                                    </Select>
+                                    {this.state.commodities.length > 0 ?
+            <Select native defaultValue={this.state.trade.commodity} 
+            input={<Input id="commodityCT" />}  onChange={this.setPriceValue.bind(this)} >
+            {
+                                        this.state.commodities.map(n=> {
+                                            return (<option value={n.symbol}>{n.name}</option>);
+                                        })
+            }
+            </Select>
+                                    :
+                                    null
+                                    }
                                 </FormControl>
-                            </td>
+                           </td>
                         </tr>
                         <tr>
                             <td>Side</td>
@@ -197,32 +179,34 @@ import styles from "../../../assets/app.css";
                                     aria-label="Sell"
                                     label="Sell"
                                 /> Sell
-                            </td>
+                          </td>
                         </tr>
                         <tr>
                             <td>Counterparty</td>
                             <td>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Counterparty</InputLabel> */}
-                                    <Select native defaultValue={0} input={<Input ref="counterPartyCT" id="counterPartyCT" />}>
-                                        <option value="" />
-                                        {
-                                            this.state.counterPartyData.map( n => {
-                                                return (
-                                                    <option value={n.counterPartyId}>{n.counterParty}</option>
-                                                );
-                                            })
+                                        {this.state.counterParties.length > 0 ?
+                                    <Select native defaultValue={this.state.trade.counterParty} 
+                                    input={<Input id="counterPartyCT" />}>
+                                            {
+                                        this.state.counterParties.map(n=> {
+                                        return (<option value={n.symbol}>{n.name}</option>);
+                                        })
                                         }
                                     </Select>
+                                    :
+                                    null
+                                    }
                                     {/* <FormHelperText>Uncontrolled</FormHelperText> */}
                                     </FormControl>
 
-                            </td>
+                           </td>
                         </tr>
                         <tr>
                             <td>Price</td>
                             <td>
-                                <div id="priceCT" ref="priceCT"> {'$1234.45 USD'}</div>
+                                <div id="priceCT" ref="priceCT"> {this.state.price}</div>
                             </td>
                         </tr>
                         <tr>
@@ -230,23 +214,29 @@ import styles from "../../../assets/app.css";
                             <td>
                                 <FormControl className={this.classes.formControl}>
                                     {/* <InputLabel htmlFor="uncontrolled-native">Location</InputLabel> */}
-                                    <Select native defaultValue={1} input={<Input id="locationCT" ref="locationCT" />}>
-                                        <option value="" />
+                                    {this.state.locations.length > 0 ?
+                                        <Select native defaultValue={this.state.trade.location} 
+                                        input={<Input id="locationCT" />}>
                                         {
-                                            this.state.locationData.map( n => {
-                                                return (
-                                                    <option value={n.locationId}>{n.location}</option>
-                                                );
-                                            })
-                                        }
+                                        this.state.locations.map(n=> {
+                                            return (<option value={n.symbol}>{n.name}</option>);
+                                        })
+                                    }
                                     </Select>
+                                    :
+                                    null
+                                    }
                                 </FormControl>
-                            </td>
+                             </td>
                         </tr>
                     </body>
                 </table>
                 <Button raised  className={this.classes.button} onClick = {() => this.props.showRightPanel('none')}>Cancel</Button>&emsp;
-                <Button raised  className={this.classes.button} onClick = {() => this.saveTrade()}>Save</Button>
+{this.props.isEditable == 'true'?
+     <Button raised  className={this.classes.button} onClick = {() => this.saveTrade()}>Update</Button>
+:
+<Button raised  className={this.classes.button} onClick = {() => this.saveTrade()}>Save</Button>
+}
             </div> 
         )
     }

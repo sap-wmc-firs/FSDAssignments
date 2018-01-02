@@ -5,7 +5,7 @@ const TRADE_ADDED = {
       };
 
 const MARKET_DATA_MODIFIED = {
-        channel: 'trade added'
+        channel: 'market data modified'
       };
 
 exports.startConsumers = function(args, io){
