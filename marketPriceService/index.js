@@ -19,15 +19,27 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-var priceRefreshInterval = 30 * 1000; // 30 seconds
+var priceRefreshInterval = 5 * 1000; // 30 seconds
 var priceBracket = {
     "min" : 1000,
     "max" : 1600
 };
 
+var priceDataMap = {
+
+};
+
 
 app.get('/servicehealth', function (req, res) {
     res.end('healthy...');
+});
+
+app.get('/price/all', function (req, res) {
+    filterAndProcessCommoditiesPrice(res, null);
+});
+
+app.get('/price/:symbol', function (req, res) {
+    filterAndProcessCommoditiesPrice(res, req.params.symbol);
 });
 
 // REST API ENDPOINTS
@@ -57,7 +69,7 @@ http.listen(9898, function () {
                 console.log('service registered with registery...');
             }); 
     }); 
-    connectToMongoDb(); 
+    connectToMongoDbAndProcessData(); 
 });
 
 
@@ -96,45 +108,8 @@ function postUpdateToNotificationService(dataToSend){
          
 }
 
-function UpdatePrice(){
-    
-}
-
-function getDataFromMongoDb(){
-    var data=null;
-    console.log(priceBracket.min);
-    console.log(priceBracket.max);
-    dbInstance.collection('commodities').find().toArray(function (err, results) {
-     if (results.length > 0) {
-         var index = 0;
-         for (;index < results.length; index++) { 
-             var rs = results[index];
-             var priceVal = Math.floor(Math.random() * (priceBracket.max - priceBracket.min)) + priceBracket.min;
-             rs.price = priceVal;
-         }
-         
-           data = JSON.stringify(results);
-           console.log(data);
-           postUpdateToNotificationService(data);
-     } else {
-        console.log("Metadata not available.");
-     }
-        
-});
-
-}
-
-function connectToMongoDb(){
-    mongoDB.onConnect(function (err, db, objectId) {
-        if (err) {
-            console.log(err.stack);
-        } else {
-            dbInstance = db;
-            setInterval(function(){
-               getDataFromMongoDb()
-            }, priceRefreshInterval);
-         }
-    });
+function getNewPrice(){
+    return Math.floor(Math.random() * (priceBracket.max - priceBracket.min)) + priceBracket.min;
 }
 
 function handleRefServiceRequest(res, socket, entity, symbol) {
@@ -143,56 +118,107 @@ function handleRefServiceRequest(res, socket, entity, symbol) {
         symbol
     } : {};
 
-    mongoDB.onConnect(function (err, db, objectId) {
+    dbInstance.collection(entity).find(query).toArray(function (err, mongoRes) {
         if (err) {
             console.log(err.stack);
             if (res) {
-                res.end('failed to connect with mongo db');
-            } else {
+                res.end('failed to get data from collection');
+            } 
+            else {
                 socket.emit('REFENTITY', {
                     symbol: symbol,
-                    error: 'failed to connect with mongo db'
+                    error: 'failed to get data from collection'
                 });
             }
         } else {
-            dbInstance=db;
-            db.collection(entity).find(query).toArray(function (err, mongoRes) {
-                if (err) {
-                    console.log(err.stack);
-                    if (res) {
-                        res.end('failed to get data from collection');
-                    } 
-                    else {
-                        socket.emit('REFENTITY', {
-                            symbol: symbol,
-                            error: 'failed to get data from collection'
-                        });
-                    }
+            if (mongoRes.length > 0) {
+                var data = JSON.stringify(symbol ? mongoRes[0] : mongoRes);
+                console.log(data);
+                if (res) {
+                    res.end(data);
                 } else {
-                    if (mongoRes.length > 0) {
-                        var data = JSON.stringify(symbol ? mongoRes[0] : mongoRes);
-                        console.log(data);
-                        if (res) {
-                            res.end(data);
-                        } else {
-                            socket.emit('REFENTITY', {
-                                symbol,
-                                entity,
-                                data
-                            });
-                        }
-                    } else {
-                        if (res) {
-                            res.end('{"error: "no record found for entity - ' + entity + ' symbol - ' + symbol + '"}');
-                        } else {
-                            socket.emit('REFENTITY', {
-                                symbol: symbol,
-                                error: 'no record found for entity - ' + entity + ' symbol - ' + symbol
-                            });
-                        }
-                    }
+                    socket.emit('REFENTITY', {
+                        symbol,
+                        entity,
+                        data
+                    });
                 }
-            });
+            } else {
+                if (res) {
+                    res.end('{"error: "no record found for entity - ' + entity + ' symbol - ' + symbol + '"}');
+                } else {
+                    socket.emit('REFENTITY', {
+                        symbol: symbol,
+                        error: 'no record found for entity - ' + entity + ' symbol - ' + symbol
+                    });
+                }
+            }
         }
     });
 }
+
+function filterAndProcessCommoditiesPrice(res, symbol) {
+    console.log('entity symbol - ' + symbol);
+    var query = symbol ? {
+        symbol
+    } : {};
+    dbInstance.collection('commodities').find(query).toArray(function (err, results) {
+        if(err) {
+            console.log(err.stack);
+            if (res) {
+                res.end('failed to get data from collection');
+            } 
+        } else {
+            if (results.length > 0) {
+                var index = 0;
+                for (;index < results.length; index++) {
+                    var rs = results[index];
+                    rs.price = getNewPrice();
+                }
+                
+                  var data = JSON.stringify(results);
+                  console.log(data);
+                  res.end(data);
+            } else {
+                res.end('failed to get data from collection');
+            }
+        }
+
+    });
+}
+
+function getAllCommoditiesPrice(notifyData) {
+    dbInstance.collection('commodities').find().toArray(function (err, results) {
+        if (results.length > 0) {
+            var index = 0;
+            for (;index < results.length; index++) {
+                var rs = results[index];
+                rs.price = getNewPrice();
+            }
+            
+              var data = JSON.stringify(results);
+              console.log(data);
+              if(notifyData && notifyData === true) {
+                postUpdateToNotificationService(data);
+              }
+        } else {
+           console.log("Metadata not available.");
+        }
+    });
+}
+
+
+function connectToMongoDbAndProcessData(){
+    mongoDB.onConnect(function (err, db, objectId) {
+        if (err) {
+            console.log(err.stack);
+        } else {
+            dbInstance = db;
+            getAllCommoditiesPrice(true);
+            setInterval(function(){
+                getAllCommoditiesPrice(true);
+            }, priceRefreshInterval);
+         }
+    });
+}
+
