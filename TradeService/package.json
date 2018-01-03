@@ -12,11 +12,12 @@
 				"body-parser": "^1.18.2",
 				"consul": "^0.30.0",
 				"cors": "^2.8.4",
+				"eureka-js-client": "^4.3.0",
 				"express": "^4.16.2",
 				"mongodb": "^2.2.33",
+				"request": "^2.74.0",
 				"socket.io": "^2.0.4",
-				"winston": "^2.4.0",
-				"request": "^2.74.0"
+				"winston": "^2.4.0"
 		},
 		"author": "Avi Jain",
 		"license": "ISC"

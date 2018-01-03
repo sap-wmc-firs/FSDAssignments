@@ -6,11 +6,35 @@ const mongoDB = require('./db/mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const request = require('request');
+const Eureka = require('eureka-js-client').Eureka;
 
-var consul = require('consul') ({
-	host: '127.0.0.1',
-	port: 8500
-});
+const client = new Eureka({
+    // application instance information 
+    instance: {
+      app: 'trade-data-service',
+      hostName: 'localhost',
+      ipAddr: '127.0.0.1',
+      port: {
+        '$': 8999,
+        '@enabled': 'true',
+      },
+      vipAddress: 'trade-data-service',
+      statusPageUrl: 'http://localhost:8999/serverhealth',
+      dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        name: 'MyOwn',
+      },
+    },
+    eureka: {
+      // eureka server host / port 
+      host: 'localhost',
+      port: 8761,
+      servicePath: '/eureka/apps/',
+      fetchRegistry: true,
+      registerWithEureka: true,
+      maxRetries: 2
+    },
+  });
 
 app.set('json space', 2);
 app.enable('trust proxy');
@@ -50,23 +74,10 @@ http.listen(8999, function() {
 		if(err)	throw err;
         var healthCheckUrl = 'http://'+ add +':8999/serverhealth';  
         console.log(healthCheckUrl)
-        consul.agent.service.register({
-            name: 'trade-data-service',
-            id: 'trade-data-service',
-            check:{
-				http: healthCheckUrl,
-				interval: "5s",
-				deregistercriticalserviceafter: '15s'
-            }
-		}, function(err) {
-			if (err) {
-				console.log(err);
-				//throw err;
-			}
-			else {
-				console.log('service registered with registery...');
-			}			
-			}); 
+        client.logger.level('debug');   
+        client.start(function(error) {
+        console.log('########################################################');
+        console.log(JSON.stringify(error) || 'Eureka registration complete');   });
     });
 });
 
