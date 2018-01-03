@@ -178,6 +178,8 @@ function filterAndProcessCommoditiesPrice(res, symbol) {
                 
                   var data = JSON.stringify(results);
                   console.log(data);
+                  res.header("Access-Control-Allow-Origin", "*");
+                  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                   res.end(data);
             } else {
                 res.end('failed to get data from collection');

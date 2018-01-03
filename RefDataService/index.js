@@ -107,6 +107,8 @@ function handleRefServiceRequest(res, socket, entity, symbol) {
                         var data = JSON.stringify(symbol ? mongoRes[0] : mongoRes);
                         console.log(data);
                         if (res) {
+                            res.header("Access-Control-Allow-Origin", "*");
+                            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                             res.end(data);
                         } else {
                             socket.emit('REFENTITY', {
