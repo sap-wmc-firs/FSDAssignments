@@ -33,48 +33,44 @@ export default class CreateTrade extends Component{
     }
     
     componentDidMount(){
-        fetch("http://localhost:9998/entities/locations")
+        fetch("http://localhost:8079/api/ref-data-service/entities/locations")
             .then(response=>{
             response.json().then(data=> {
                 console.log(data);
                 this.setState({locations:data});
               });
         }); 
-        fetch("http://localhost:9998/entities/counterparties")
+        fetch("http://localhost:8079/api/ref-data-service/entities/counterparties")
             .then(response=>{
             response.json().then(data=> {
                 console.log(data);
                 this.setState({counterParties:data});
               });
         }); 
-        fetch("http://localhost:9998/entities/commodities")
+        fetch("http://localhost:8079/api/ref-data-service/entities/commodities")
             .then(response=>{
             response.json().then(data=> {
                 console.log(data);
                 this.setState({commodities:data});
-                var elements = {};
-                data.forEach(item=>{
-                    elements[item.symbol] = item.price;
-                })
-                this.setState({elements:elements, price:elements[this.state.commodities[0].symbol]});
-              });
-        }); 
-        fetch("http://localhost:9898/metalPrice")
-            .then(response=>{
-            response.json().then(data=> {
-                console.log(data);
-                var elements = {};
-                data.forEach(item=>{
-                    elements[item.symbol] = item.price;
-                })
-                this.setState({elements:elements});
+                fetch("http://localhost:8079/api/metal-price-service/price/all")
+                .then(response=>{
+                    response.json().then(data=> {
+                        console.log(data);
+                        var elements = {};
+                        data.forEach(item=>{
+                            elements[item.symbol] = item.price;
+                        })
+                        this.setState({elements:elements,price:elements[this.state.commodities[0].symbol]});
+                    });
+                }); 
             });
         }); 
+        
         if(this.props.isEditable == 'true'){
             this.setState({trade: this.props.trade})
         }
         
-        this.state.socket = io.connect( 'http://localhost:3030/' );
+        this.state.socket = io.connect('http://localhost:3030');
 
         this.state.socket.on( 'connect', () => {
             this.state.socket.emit( 'join channel', 'marketDataModified', function( confirmation ) {
