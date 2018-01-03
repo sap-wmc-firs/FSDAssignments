@@ -96,10 +96,15 @@ io.on('connection', function (socket) {
 
 // actual request handlers
 function getAllTradesServiceRequest(res, socket) {
+	if (res) {
+		res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+	}
     mongoDB.onConnect(function (err, db, objectId) {
         if (err) {
             console.log(err.stack);
             if (res) {
+			
                 res.end('failed to connect with mongo db');
             } else {
                 socket.emit('ALLTRADES', {
@@ -145,6 +150,10 @@ function getAllTradesServiceRequest(res, socket) {
 }
 
 function updateTradeServiceRequest(res, socket, req) {
+	if (res) {
+		res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+	}
 	if (req!==undefined && req!==null) {
 		var side = req.side;
 		if (side===undefined || side===null) {
@@ -306,6 +315,10 @@ function sendDataToNotificationService(obj) {
 
 function deleteTradeServiceRequest(res, socket, req) {
 	//TODO
+	if (res) {
+		res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+	}
 	if (req!==undefined && req!==null) {
 		mongoDB.onConnect(function (err, db, objectId) {
 			if (err) {
