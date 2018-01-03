@@ -6,9 +6,34 @@ const mongoDB = require('./db/mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-var  consul  =  require('consul')({    
-    host:   '127.0.0.1',
-        port:  8500
+const Eureka = require('eureka-js-client').Eureka;
+
+const client = new Eureka({
+    // application instance information 
+    instance: {
+      app: 'ref-data-service',
+      hostName: 'localhost',
+      ipAddr: '127.0.0.1',
+      port: {
+        '$': 9998,
+        '@enabled': 'true',
+      },
+      vipAddress: 'ref-data-service',
+      statusPageUrl: 'http://localhost:9998/serverhealth',
+      dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        name: 'MyOwn',
+      },
+    },
+    eureka: {
+      // eureka server host / port 
+      host: 'localhost',
+      port: 8761,
+      servicePath: '/eureka/apps/',
+      fetchRegistry: true,
+      registerWithEureka: true,
+      maxRetries: 2
+    },
 });
 
 app.set('json space', 2);
@@ -41,22 +66,15 @@ app.get('/entities/:type/:symbol', function (req, res) {
 http.listen(9998, function () {
     console.log('ref data service started...');
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-        if (err) throw err;
-        var healthCheckUrl = 'http://'+ add +':9998/servicehealth';  
-        console.log(healthCheckUrl)     
-        consul.agent.service.register({
-                name: 'ref-data-service',
-                id: 'ref-data-service',
-                check: {
-                    http: healthCheckUrl,
-                    interval: "5s",     
-                    deregistercriticalserviceafter: '15s'
-                }
-            }, function(err) {
-                if (err) throw err;
-                console.log('service registered with registery...');
-            }); 
-    });    
+		if(err)	throw err;
+        var healthCheckUrl = 'http://'+ add +':9998/serverhealth';  
+        console.log(healthCheckUrl)
+        client.logger.level('debug');   
+        client.start(function(error) {
+        console.log('########################################################');
+        console.log(JSON.stringify(error) || 'Eureka registration complete');   });
+    });
+   
 });
 
 

@@ -7,9 +7,34 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 var dbInstance=null;
 var request = require('request');
-var  consul  =  require('consul')({    
-    host:   'localhost',
-        port:  8500
+const Eureka = require('eureka-js-client').Eureka;
+
+const client = new Eureka({
+    // application instance information 
+    instance: {
+      app: 'metal-price-service',
+      hostName: 'localhost',
+      ipAddr: '127.0.0.1',
+      port: {
+        '$': 9898,
+        '@enabled': 'true',
+      },
+      vipAddress: 'metal-price-service',
+      statusPageUrl: 'http://localhost:9898/serverhealth',
+      dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        name: 'MyOwn',
+      },
+    },
+    eureka: {
+      // eureka server host / port 
+      host: 'localhost',
+      port: 8761,
+      servicePath: '/eureka/apps/',
+      fetchRegistry: true,
+      registerWithEureka: true,
+      maxRetries: 2
+    },
 });
 
 app.set('json space', 2);
@@ -51,24 +76,14 @@ app.get('/', function (req, res) {
 http.listen(9898, function () {
     console.log('ref data service started...');
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-        if (err) throw err;
-        var healthCheckUrl = 'http://'+ add +':9898/servicehealth';  
-        console.log(healthCheckUrl)     
-        consul.agent.service.register({
-                name: 'metal-price-service',
-                id: 'metal-price-service',
-            address:add,
-            port:9898,
-                check: {
-                    http: healthCheckUrl,
-                    interval: "5s",     
-                    deregistercriticalserviceafter: '15s'
-                }
-            }, function(err) {
-                if (err) throw err;
-                console.log('service registered with registery...');
-            }); 
-    }); 
+		if(err)	throw err;
+        var healthCheckUrl = 'http://'+ add +':9898/serverhealth';  
+        console.log(healthCheckUrl)
+        client.logger.level('debug');   
+        client.start(function(error) {
+        console.log('########################################################');
+        console.log(JSON.stringify(error) || 'Eureka registration complete');   });
+    });
     connectToMongoDbAndProcessData(); 
 });
 
