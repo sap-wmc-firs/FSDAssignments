@@ -1,5 +1,6 @@
 'use strict'
-const app = require('express')();
+var express = require('express');
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const mongoDB = require('./db/mongodb');
@@ -14,6 +15,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+var refDataRouter = express.Router();
+app.use('/refdata', refDataRouter);
+
+var ntlm = require('express-ntlm');
+refDataRouter.use(ntlm());
+
+refDataRouter.get('/username', function(request, response) {
+  //  console.log(request);
+  console.log("****"+request.ntlm);  
+  response.send(request.ntlm);
+});
 
 app.get('/servicehealth', function (req, res) {
     res.end('healthy...');
