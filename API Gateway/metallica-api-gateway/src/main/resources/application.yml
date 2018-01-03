@@ -14,6 +14,9 @@ zuul:
     metal-price-service:
       path: /metal-price-service/**
       serviceId: METAL-PRICE-SERVICE
+    producer-client:
+      path: /producer-client/**
+      serviceId: PRODUCER-CLIENT
 
 eureka:
   client:
