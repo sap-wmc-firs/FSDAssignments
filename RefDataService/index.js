@@ -5,11 +5,8 @@ const io = require('socket.io')(http);
 const mongoDB = require('./db/mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
-var  consul  =  require('consul')({    
-    host:   '127.0.0.1',
-        port:  8500
-});
+const port = 9998;
+const eureka = require('eureka-js-client').Eureka;
 
 app.set('json space', 2);
 app.enable('trust proxy');
@@ -17,8 +14,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-
 
 app.get('/servicehealth', function (req, res) {
     res.end('healthy...');
@@ -38,25 +33,46 @@ app.get('/entities/:type/:symbol', function (req, res) {
     handleRefServiceRequest(res, null, req.params.type, req.params.symbol.toUpperCase());
 });
 
-http.listen(9998, function () {
+http.listen(port, function () {
     console.log('ref data service started...');
     require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-        if (err) throw err;
-        var healthCheckUrl = 'http://'+ add +':9998/servicehealth';  
-        console.log(healthCheckUrl)     
-        consul.agent.service.register({
-                name: 'ref-data-service',
-                id: 'ref-data-service',
-                check: {
-                    http: healthCheckUrl,
-                    interval: "5s",     
-                    deregistercriticalserviceafter: '15s'
-                }
-            }, function(err) {
-                if (err) throw err;
-                console.log('service registered with registery...');
-            }); 
-    });    
+        if  (err)  throw  err;
+        var healthCheckUrl = 'http://' + add + ':' + port + '/servicehealth';
+        console.log(healthCheckUrl)
+        const client = new eureka({
+            // application instance information 
+            instance: {
+                app: 'ref-data-service',
+                ipAddr: add,
+                hostName: require('os').hostname() + '' || 'localhost',
+                port: {
+                    '$': port,
+                    '@enabled': 'true',
+                },
+                vipAddress: 'ref-data-service',
+                statusPageUrl: healthCheckUrl,
+                dataCenterInfo: {
+                    '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+                    name: 'MyOwn',
+                },
+            },
+            eureka: {
+                // eureka server host / port 
+                host: 'localhost',
+                port: 8761,
+                servicePath: '/eureka/apps/',
+                fetchRegistry: true,
+                registerWithEureka: true,
+                maxRetries: 2
+            },
+        });
+
+        client.logger.level('debug');
+        client.start(function (error) {
+            console.log('########################################################');
+            console.log(error ? JSON.stringify(error) : 'Eureka registration complete');
+        });
+    });
 });
 
 
