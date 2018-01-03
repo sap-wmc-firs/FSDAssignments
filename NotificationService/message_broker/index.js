@@ -3,9 +3,40 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var producer = require('./producer.js');
-var consul = require('consul') ({
-	host: 'localhost',
-	port: 8500
+const Eureka = require('eureka-js-client').Eureka;
+
+const client = new Eureka({
+    // application instance information 
+    instance: {
+      app: 'producer-client',
+      hostName: 'localhost',
+      ipAddr: '127.0.0.1',
+      port: {
+        '$': 3000,
+        '@enabled': 'true',
+      },
+      vipAddress: 'producer-client',
+      statusPageUrl: 'http://localhost:3000/api/health',
+      dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        name: 'MyOwn',
+      },
+    },
+    eureka: {
+      // eureka server host / port 
+      host: '127.0.0.1',
+      port: 8761,
+      servicePath: '/eureka/apps/',
+      fetchRegistry: true,
+      registerWithEureka: true,
+      maxRetries: 2
+    },
+});
+
+client.logger.level('debug');   
+client.start(function(error) {
+    console.log('###############');
+    console.log(JSON.stringify(error) || 'Eureka registration complete');   
 });
 
 // configure app to use bodyParser()
@@ -48,21 +79,4 @@ router.post('/addMarketDataToQueue', function(req, res){
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router);
-
-// Register to Consul
-consul.agent.service.register({
-	name: 'producer-service',
-	id: 'producer-service',
-	address: 'localhost', //internal ip of the host running the service
-	port: 3000,     //port
-	check: {
-		http: 'http://localhost:3000/api/health', //health-check endpoint
-		interval: "5s",  //health check iterval
-		deregistercriticalserviceafter: '15s'  //deregister threshold
-	}
-  }, function(err) {
-      if (err) {
-		//throw err;
-	  }
-  });
+app.use('/producer', router);
