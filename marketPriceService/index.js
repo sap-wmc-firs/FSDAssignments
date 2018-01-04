@@ -43,6 +43,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(cors());
 
 var priceRefreshInterval = 60 * 1000; // 30 seconds
 var priceBracket = {

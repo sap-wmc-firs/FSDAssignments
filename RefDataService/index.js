@@ -16,11 +16,14 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(cors());
+
 var refDataRouter = express.Router();
 app.use('/refdata', refDataRouter);
 
 var ntlm = require('express-ntlm');
 refDataRouter.use(ntlm());
+refDataRouter.use(cors());
 
 refDataRouter.get('/username', function(request, response) {
   //  console.log(request);

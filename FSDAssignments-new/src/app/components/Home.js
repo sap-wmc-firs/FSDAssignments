@@ -43,6 +43,16 @@ import Transports from "./Transports";
 
       this.classes = props;
     }
+
+    componentDidMount() {
+      var authURL = "http://localhost:9998/refdata/username";
+      fetch(authURL)
+      .then(results => {
+        return results.json;
+      }).then(data => {
+        console.log(data);
+      })
+    }
         
           handleChange = (event, value) => {
             const tabValue = value;
