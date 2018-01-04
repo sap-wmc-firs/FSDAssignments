@@ -25,7 +25,7 @@ const styles = theme => ({
         <AppBar position="static" color="default">
            <Toolbar>
              <Typography type="title" color="inherit">
-             Copyrights@2017, React App
+             Copyrights@2018, React App
              </Typography>
            </Toolbar>
          </AppBar>

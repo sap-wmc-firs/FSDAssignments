@@ -32,6 +32,7 @@ export default class Trades extends Component{
     }
 
     componentDidMount() {
+        
         const data = [
             {
               "tradeId": 1001,
@@ -110,7 +111,7 @@ export default class Trades extends Component{
             } );
         } );
         this.state.socket.on( 'connect_error', () => {
-                alert( "There seems to be an issue with Data Notification Service! Please contact #FIIDS" );
+                alert( "There seems to be an issue with Data Notification Service !!" );
         } );
         this.state.socket.on( 'trade added', ( socketData ) => {
             var respData = JSON.parse(socketData);

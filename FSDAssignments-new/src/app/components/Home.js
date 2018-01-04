@@ -37,7 +37,8 @@ import Transports from "./Transports";
     constructor(props){
       super(props);
       this.state = {
-        tabValue: props.tabValue
+        tabValue: props.tabValue,
+        userName: 'sapient'
       }
 
       this.classes = props;
@@ -50,7 +51,8 @@ import Transports from "./Transports";
 
           render(){
             
-            const  tab = this.state.tabValue;
+            const tab = this.state.tabValue;
+            const uname = this.state.userName;
 
             return (
               <div className={this.classes.root}>
@@ -59,7 +61,7 @@ import Transports from "./Transports";
                       <Tab value="trades" label="TRADES" />
                       <Tab value="transfers" label="TRANSFERS" />
                       <Tab value="transports" label="TRANSPORTS" />
-                      <div>Shubha <Icon icon={user}/></div>
+                      <div>{uname} <Icon icon={user}/></div>
                     </Tabs> 
                   </AppBar>
                 

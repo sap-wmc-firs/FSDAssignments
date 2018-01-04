@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-var priceRefreshInterval = 5 * 1000; // 30 seconds
+var priceRefreshInterval = 60 * 1000; // 30 seconds
 var priceBracket = {
     "min" : 1000,
     "max" : 1600
