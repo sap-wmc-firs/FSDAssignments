@@ -26,6 +26,16 @@ export default class Trades extends Component{
             socket : null
         }
     }
+
+    componentDidMount() {
+        var authURL = "http://localhost:9998/refdata/username";
+        fetch(authURL)
+        .then(results => {
+          return results.json;
+        }).then(data => {
+          console.log(data);
+        })
+      }
     
     componentWillReceiveProps(nextprops){
         console.log(nextprops);
@@ -33,7 +43,7 @@ export default class Trades extends Component{
 
     componentDidMount() {
         
-        const data = [
+        /*const data = [
             {
               "tradeId": 1001,
               "tradeDate": "03-23-2017",
@@ -100,7 +110,7 @@ export default class Trades extends Component{
               "location": "SG"
             }
           ];
-        
+        */
         this.state.socket = io.connect( 'http://localhost:3030/' );
 
         // listen to messages on socket
@@ -126,8 +136,8 @@ export default class Trades extends Component{
                }
         } );
 
-        this.props.actions.initTrades(data);
-        //this.props.actions.fetchTradesAsync();
+        
+        this.props.actions.fetchTradeDataListAsync();
       }
 
     showRightPanel (panelName){

@@ -1,4 +1,5 @@
 const API_END_POINT = "http://localhost:7070";
+const TRADE_SERVICE_API_END_POINT = "http://localhost:8999";
 
 function fetchJson(url){
     return fetch(url).then(
@@ -36,4 +37,9 @@ function fetchJson(url){
 
 export function fetchTrades() {
     return fetchJson(API_END_POINT + "/getTrades");
+}
+
+
+export function getTradeDataList() {
+    return fetchJson(TRADE_SERVICE_API_END_POINT + "/get/trades/all");
 }

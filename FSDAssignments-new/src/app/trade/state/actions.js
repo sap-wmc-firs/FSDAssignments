@@ -100,3 +100,21 @@ export function fetchTradesAsync() {
         }
     }
 }
+
+export function fetchTradeDataListAsync() {
+    //thunk shall pass the dispatch
+    return async function(dispatch, getState) {
+        //no error
+        dispatch(initError(false));
+        dispatch(loading(true));
+
+        try {
+            let trades = await service.getTradeDataList();
+            dispatch(initTrades(trades));
+            dispatch(loading(false));
+        }catch (error){
+            dispatch(loading(false));
+            dispatch(initError(error.toString()));
+        }
+    }
+}
