@@ -1,5 +1,6 @@
 const API_END_POINT = "http://localhost:7070";
-const TRADE_SERVICE_API_END_POINT = "http://localhost:8999";
+//const TRADE_SERVICE_API_END_POINT = "http://localhost:8999";
+const TRADE_SERVICE_API_END_POINT = "http://localhost:8079/api/trade-data-service";
 
 function fetchJson(url){
     return fetch(url).then(
